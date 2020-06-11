@@ -1,0 +1,10 @@
+version: '3'
+services:
+  node:
+    build: .
+    ports:
+      - 4000:4000
+    environment:
+      - FLY_REDIS_CACHE_URL=redis
+  redis:
+    image: "redis:alpine"

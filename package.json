@@ -1,0 +1,16 @@
+{
+  "name": "fly-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "khughes.me@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.14.3",
+    "apollo-server-cache-redis": "^1.2.1",
+    "graphql": "^15.1.0"
+  }
+}
