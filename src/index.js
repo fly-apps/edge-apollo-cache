@@ -1,37 +1,37 @@
+const BooksApi = require('./books-api');
 const { ApolloServer, gql } = require('apollo-server');
 const { RedisCache } = require('apollo-server-cache-redis');
 
 // The schema defines the shape of data available
 const typeDefs = gql`
   type Book {
+    bib_key: String!
+    thumbnail_url: String
+    preview_url: String
+    info_url: String
+  }
+  type SearchBook {
+    isbn: [String]
+    author_name: [String]
+    contributor: [String]
     title: String
-    author: String
+    first_publish_year: Int
   }
   type Query {
-    books: [Book]
+    book(bib_key: String!): Book
+    search(search: String!, type: String): [SearchBook]
   }
 `;
-
-// The actual data for this app
-const books = [
-  {
-    title: 'The Wind-Up Bird Chronicle',
-    author: 'Haruki Murakami',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-  {
-    title: 'The Old Man and the Sea',
-    author: 'Ernest Hemingway',
-  },
-];
 
 // Resolves the data based on the query performed
 const resolvers = {
   Query: {
-    books: () => books,
+    book: async (_source, { bib_key }, { dataSources }) => {
+      return dataSources.booksApi.getBook(bib_key);
+    },
+    search: async (_source, {search, type}, { dataSources }) => {
+      return dataSources.booksApi.getSearchBooks(search, type);
+    },
   },
 };
 
@@ -39,12 +39,13 @@ const resolvers = {
 const cache = new RedisCache({
   host: process.env.FLY_REDIS_CACHE_URL,
 });
-const cacheControl = { defaultMaxAge: 30 };
+const cacheControl = { defaultMaxAge: 3600 };
 
 // Creates the Apollo Server with given definitions, resolvers, and cache objects
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  dataSources: () => ({ booksApi: new BooksApi() }),
   cache,
   cacheControl,
 });

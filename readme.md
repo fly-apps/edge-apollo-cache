@@ -7,7 +7,8 @@
 Fly is an edge hosting solution that supports a distributed Redis cache. Apollo is a GraphQL server that
 integrates with a variety of data sources and can be run in Node.
 
-This application demonstrates using these three technologies together to serve a GraphQL server on Fly.
+This application demonstrates using these three technologies together to serve a GraphQL server on Fly. It
+uses the [Open Library API](https://openlibrary.org/developers/api) as a backend to serve two GraphQL endpoints.
 
 ## Prerequisites
 
@@ -16,7 +17,7 @@ This application demonstrates using these three technologies together to serve a
 
 ## Running Locally
 
-- Clone this repo: `git ...`
+- Clone this repo
 - Build the Docker image: `docker-compose build`
 - Run the Docker image and a Redis instance locally: `docker-compose up`
 
@@ -32,19 +33,31 @@ Visit the host in your browser to view the GraphQL playground.
 
 ## Running GraphQL queries
 
-To view all the records, enter:
+To search books, enter:
 
 ```
 {
-  books {
-    title,
-    author
-  }
+ search(search:"for whom the bell tolls") {
+   isbn
+   author_name
+   contributor
+   title
+   first_publish_year
+ }
 }
 ```
 
-You should see a results object on the right half of your screen:
+To get a single book by ISBN, enter:
 
-![Serving GraphQL on Fly with Apollo](https://i.imgur.com/yBsCHNf.png)
+```
+{
+  book(bib_key:"ISBN:0385472579") {
+    bib_key,
+    thumbnail_url,
+    preview_url,
+    info_url
+  }
+}
+```
 
 Learn more about GraphQL playground [in the documentation](https://www.apollographql.com/docs/apollo-server/testing/graphql-playground/).
