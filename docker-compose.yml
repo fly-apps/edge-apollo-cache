@@ -5,6 +5,6 @@ services:
     ports:
       - 4000:4000
     environment:
-      - FLY_REDIS_CACHE_URL=redis
+      - REDIS_HOST=redis
   redis:
     image: "redis:alpine"

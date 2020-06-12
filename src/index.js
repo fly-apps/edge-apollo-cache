@@ -1,6 +1,7 @@
 const BooksApi = require('./books-api');
 const { ApolloServer, gql } = require('apollo-server');
 const { RedisCache } = require('apollo-server-cache-redis');
+const { ConnectionString } = require('connection-string');
 
 // The schema defines the shape of data available
 const typeDefs = gql`
@@ -35,10 +36,22 @@ const resolvers = {
   },
 };
 
-// Redis cache connection credentials and max age
-const cache = new RedisCache({
-  host: process.env.FLY_REDIS_CACHE_URL,
-});
+// Redis cache connection credentials
+let cache;
+
+if (process.env.REDIS_HOST) {
+  // When using docker-compose for local development
+  cache = new RedisCache({ host: process.env.REDIS_HOST });
+} else if (process.env.FLY_REDIS_CACHE_URL) {
+  // When hosting on Fly
+  const redisCredentials = new ConnectionString(process.env.FLY_REDIS_CACHE_URL);
+  cache = new RedisCache({
+    host: redisCredentials.hosts[0].name,
+    port: redisCredentials.hosts[0].port,
+    password: redisCredentials.password,
+  });
+}
+
 const cacheControl = { defaultMaxAge: 3600 };
 
 // Creates the Apollo Server with given definitions, resolvers, and cache objects
