@@ -1,6 +1,7 @@
 const BooksApi = require('./books-api');
 const { ApolloServer, gql } = require('apollo-server');
 const { RedisCache } = require('apollo-server-cache-redis');
+const responseCachePlugin = require('apollo-server-plugin-response-cache');
 const { ConnectionString } = require('connection-string');
 
 // The schema defines the shape of data available
@@ -61,6 +62,7 @@ const server = new ApolloServer({
   dataSources: () => ({ booksApi: new BooksApi() }),
   cache,
   cacheControl,
+  plugins: [responseCachePlugin({ cache })],
 });
 
 // Launch the web server
