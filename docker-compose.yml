@@ -3,7 +3,7 @@ services:
   node:
     build: .
     ports:
-      - 4000:4000
+      - 8080:8080
     environment:
       - REDIS_HOST=redis
   redis:

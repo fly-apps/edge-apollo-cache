@@ -1,10 +1,10 @@
 # Running an Apollo GraphQL Server on Fly.io
 
-> Run and cache results from your Apollo GraphQL server on the edge with [Fly](https://fly.io/).
+> Run Apollo Server + Caching close to users with [Fly](https://fly.io/).
 
 ## About
 
-Fly is an edge hosting solution that supports a distributed Redis cache. Apollo is a GraphQL server that
+Fly runs tiny virtual machines close to your users, and includes a global Redis cache. Apollo is a GraphQL server that
 integrates with a variety of data sources and can be run in Node.
 
 This application demonstrates using these three technologies together to serve a GraphQL server on Fly. It
@@ -27,29 +27,26 @@ Open Library API directly:
 | Fly.io (uncached) | 1.01s  | 1.03s  | 2.27s  |
 | Fly.io (cached)   | 0.13s  | 0.11s  | 0.09s  |
 
-On uncached requests, Fly.io must connect to the Open Library API, but subsequent cached request are an order of 
-magnitude faster.
+On uncached requests, Fly.io must connect to the Open Library API, but subsequent requests will load data from the regional Fly cache.
 
-## Prerequisites
+## Deploying to Fly
 
-- [Docker](https://www.docker.com/get-started)
-- [flyctl](https://fly.io/docs/getting-started/installing-flyctl/) command line tool
+- Install [flyctl](https://fly.io/docs/getting-started/installing-flyctl/)
+- Login to Fly: `flyctl auth login`
+- Create a new Fly app: `flyctl apps create`
+- Deploy the app to Fly: `flyctl deploy`
+
+Once deployed, you can launch the playground using `flyctl open`.
 
 ## Running Locally
+
+You can run the example app locally with [Docker](https://www.docker.com/get-started).
 
 - Clone this repo
 - Build the Docker image: `docker-compose build`
 - Run the Docker image and a Redis instance locally: `docker-compose up`
 
-Visit `localhost:4000` to view the GraphQL playground. 
-
-## Deploying to Fly
-
-- Create a new Fly app: `flyctl apps create -p 4000`
-- Deploy the app to Fly: `flyctl deploy`
-- Get the Hostname by running `flyctl info`
-
-Visit the host in your browser to view the GraphQL playground.
+Visit `http://localhost:8080` to view the GraphQL playground.
 
 ## Running GraphQL queries
 

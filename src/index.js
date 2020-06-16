@@ -65,7 +65,8 @@ const server = new ApolloServer({
   plugins: [responseCachePlugin({ cache })],
 });
 
+const port = process.env.PORT || "8080";
 // Launch the web server
-server.listen().then(({ url }) => {
+server.listen({ port }).then(({ url }) => {
   console.log(`📚  Server ready at ${url}`);
 });
