@@ -1,4 +1,4 @@
-# Running an Apollo GraphQL Server on Fly.io
+# Edge GraphQL with Apollo Server and Fly.io
 
 > Run Apollo Server + Caching close to users with [Fly](https://fly.io/).
 
@@ -23,11 +23,11 @@ Open Library API directly:
 
 | Request Method    | Test 1 | Test 2 | Test 3 |
 |-------------------|--------|--------|--------|
-| Open Library API  | 2.06s  | 1.70s  | 1.24s  |
-| Fly.io (uncached) | 1.01s  | 1.03s  | 2.27s  |
-| Fly.io (cached)   | 0.13s  | 0.11s  | 0.09s  |
+| [Open Library API](#source-api-curl-request)  | 2.06s  | 1.70s  | 1.24s  |
+| [Fly.io (uncached)](#graphql-curl-request) | 1.01s  | 1.03s  | 2.27s  |
+| [Fly.io (cached)](#graphql-curl-request)   | 0.13s  | 0.11s  | 0.09s  |
 
-On uncached requests, Fly.io must connect to the Open Library API, but subsequent requests will load data from the regional Fly cache.
+On uncached requests, Fly.io must connect to the Open Library API, but subsequent requests will load data from the regional Fly cache. You can try these tests locally using [cURL](#testing-latency-with-curl)
 
 ## Deploying to Fly
 
@@ -78,3 +78,24 @@ To get a single book by ISBN, enter:
 ```
 
 Learn more about GraphQL playground [in the documentation](https://www.apollographql.com/docs/apollo-server/testing/graphql-playground/).
+
+## Testing latency with cURL
+
+If you're running on MacOS or Linux, you likely already have the cURL command line tool installed. cURL can print timing data for requests, here are examples that show total request time, TCP connect time, and TLS handshake time.
+
+#### GraphQL cURL request
+```curl
+curl 'https://<appname>.fly.dev/' \
+  -o /dev/null -sS \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"operationName":null,"variables":{},"query":"{ book(bib_key: \"ISBN:0385472579\") {\n    bib_key\n    thumbnail_url\n    preview_url\n    info_url\n  }\n}\n"}' \
+  -w "Timings\n------\ntotal:   %{time_total}\nconnect: %{time_connect}\ntls:     %{time_appconnect}\n"
+```
+
+#### Source API cURL request
+```curl
+curl 'https://openlibrary.org/api/books?bibkeys=ISBN:0385472579' \
+    -o /dev/null -sS \
+    -w "Timings\n------\ntotal:   %{time_total}\nconnect: %{time_connect}\ntls:     %{time_appconnect}\n"
+```
