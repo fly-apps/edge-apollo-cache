@@ -52,7 +52,7 @@ Learn more about GraphQL playground [in the documentation](https://www.apollogra
 
 If you prefer to use to command line, there's two scripts, scripts/bookfind.sh and scripts/booksearch.sh you can use. Set the environment variable APPNAME to your applications name- you can find the application name with `flyctl info`. 
 
-## What happens within the application
+## What Happens Inside The Application
 
 There are a number of parts of the server which are mostly defining the configuration of the packages used. `apollo-server` handles the web interactions, `apollo-server-cache-redis` is a component for that server which manages Redis as a general purpose cache and `apollo-server-plugin-response-cache` uses that cache for the particular job of caching responses from API requests.
 
@@ -68,11 +68,15 @@ Finally an ApolloServer is created, is given all the configured items, the `type
 
 If you are wondering where the GraphQL Playground comes from in this, that's an integrated part of the Apollo Server. 
 
-## How does Fly fit into this?
+## How Does Fly Fit Into This?
 
-As we mentioned, Fly runs tiny virtual machines close to users in datacenters around the world.
+Traditionally, an application like this would run somewhere in the cloud and usually distant from its users thanks to geography. The biggest problem then is the latency of the connection between the user and the application.
 
+As we previously mentioned, Fly runs tiny virtual machines close to users in datacenters around the world. Some of these machines handle connections, terminating TLS as close to the user as possible. As TLS needs a couple of connections to get going, thats a big boost, especially with an API. The connection handlers then pass the connection on to the application itself.
 
+Applications are also run all over the world and Fly lets you put your applications in the most appropriate regions for your task. An edge cache like this could be located in the locations where you are finding the most traffic. When there is no immediatly local application, Fly automatically finds the closest place the application is running and directs connections to that place. 
+
+Edge hosting (and Fly specifically) offers significant performance benefits over traditional centralized hosting. Because requests can be served from the node closest to the user, responses will be much faster. This example uses Redis to cache responses so after the first request is made to a region, duplicate requests in the next hour will be significantly faster.
 
 
 ## Testing latency with cURL
@@ -102,15 +106,9 @@ curl 'https://openlibrary.org/api/books?bibkeys=ISBN:0385472579' \
     -w "Timings\n------\ntotal:   %{time_total}\nconnect: %{time_connect}\ntls:     %{time_appconnect}\n"
 ```
 
-## Why Fly?
+## Latency Results
 
-Edge hosting (and Fly specifically) offers significant performance benefits over traditional centralized hosting.
-Because requests can be served from the node closest to the user, responses will be much faster. This demo uses 
-Redis to cache responses so after the first request is made to a region, duplicate requests in the next hour 
-will be significantly faster.
-
-To illustrate this, here are some sample response times using this app hosted on Fly vs. making requests to the 
-Open Library API directly:
+Here are some sample response times using this app hosted on Fly vs. making requests to the Open Library API directly:
 
 | Request Method    | Test 1 | Test 2 | Test 3 |
 |-------------------|--------|--------|--------|
