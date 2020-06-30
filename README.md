@@ -52,7 +52,7 @@ To get a single book by ISBN, enter:
 
 Learn more about GraphQL playground [in the documentation](https://www.apollographql.com/docs/apollo-server/testing/graphql-playground/).
 
-If you prefer to use to command line, there's two scripts, scripts/bookfind.sh and scripts/booksearch.sh you can use. Set the environment variable APPNAME to your applications name- you can find the application name with `flyctl info`. 
+If you prefer to use to command line, there's two scripts, [`scripts/bookfind.sh`](https://github.com/fly-examples/edge-apollo-cache/blob/master/scripts/bookfind.sh) and [`scripts/booksearch.sh`](https://github.com/fly-examples/edge-apollo-cache/blob/master/scripts/booksearch.sh) you can use. Set the environment variable APPNAME to your applications name- you can find the application name with `flyctl info`. 
 
 ## What Happens Inside The Application
 
@@ -87,7 +87,7 @@ If you're running on MacOS or Linux, you likely already have the cURL command li
 
 #### GraphQL cURL request
 
-See scripts/timegraphqlapi.sh
+See [`scripts/timegraphqlapi.sh`](https://github.com/fly-examples/edge-apollo-cache/blob/master/scripts/timegraphqlapi.sh)
 
 ```curl
 curl 'https://<appname>.fly.dev/' \
@@ -100,7 +100,7 @@ curl 'https://<appname>.fly.dev/' \
 
 #### Source API cURL request
 
-See scripts/timesourceapi.sh
+See [`scripts/timesourceapi.sh`](https://github.com/fly-examples/edge-apollo-cache/blob/master/scripts/timesourceapi.sh)
 
 ```curl
 curl 'https://openlibrary.org/api/books?bibkeys=ISBN:0385472579' \
