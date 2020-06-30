@@ -4,6 +4,8 @@
 
 ## Overview
 
+<!---- cut here --->
+
 This application demonstrates how to use Fly, Redis and Apollo to enable rapid GraphQL queries from a variety of data sources. 
 
 Fly runs tiny virtual machines close to your users, and includes a global Redis cache. Apollo is a GraphQL server that integrates with a variety of data sources and can be run in Node. This application combines these three technologies to create a GraphQL server on Fly. 
