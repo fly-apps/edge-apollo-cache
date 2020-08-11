@@ -47,8 +47,8 @@ if (process.env.REDIS_HOST) {
   // When hosting on Fly
   const redisCredentials = new ConnectionString(process.env.FLY_REDIS_CACHE_URL);
   cache = new RedisCache({
-    host: redisCredentials.hosts[0].name,
-    port: redisCredentials.hosts[0].port,
+    host: redisCredentials.hostname,
+    port: redisCredentials.port,
     password: redisCredentials.password,
   });
 }
